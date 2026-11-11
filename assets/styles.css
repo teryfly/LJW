@@ -1,0 +1,985 @@
+/* 刘静文（THEA）— 版式参考 jennifermoses.com。
+   参考站的实测值：#canvas 白底、max-width 1100px、margin 50px、边框 rgba(0,0,0,.1)；
+   正文 rgba(34,34,34,.4)～#535050，导航 rgba(0,0,0,.5)，站标 #222；
+   全站 Josefin Sans 300/400，字间距 3px，小写。中文以宋体承担「衬线」那一层。 */
+
+@font-face {
+  font-family: "Noto Serif SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/notoserifsc-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Josefin Sans";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("fonts/josefinsans-300.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Josefin Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/josefinsans-400.woff2") format("woff2");
+}
+
+:root {
+  /* 纸与墨：中性石墨，只留极淡的暖，避免和画面的色彩抢调子 */
+  --paper: #fff;
+  --bg: #f7f7f5;
+  --ink: #222;
+  --ink-soft: #403f3c;
+  --gray: #6f6e6a;
+  --gray-light: #9b9a95;
+  --line: rgba(0, 0, 0, 0.1);
+  --line-soft: rgba(0, 0, 0, 0.06);
+
+  --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, serif;
+  --sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* 拉丁字母与数字走参考站那一款几何无衬线 */
+  --latin: "Josefin Sans", var(--sans);
+
+  --measure: 40em;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: var(--sans);
+  font-size: clamp(14.5px, 0.4vw + 13.6px, 16px);
+  font-weight: 400;
+  line-height: 2.05;
+  letter-spacing: 0.03em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: #eceae4;
+  color: var(--ink);
+}
+
+a:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* 键盘用户的跳转链接：平时移出视口，聚焦时才出现。 */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10;
+  padding: 12px 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+}
+
+.skip:focus {
+  left: 12px;
+  top: 12px;
+}
+
+/* ---------- 页面边框：参考站 #canvas ---------- */
+
+.frame {
+  max-width: 1180px;
+  margin: clamp(10px, 4vw, 50px) auto;
+  padding: 0 clamp(20px, 6.5vw, 92px) clamp(44px, 6vw, 72px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.page {
+  padding-top: clamp(34px, 5vw, 60px);
+}
+
+/* ---------- 页头与导航 ---------- */
+
+.site-head {
+  padding-top: clamp(36px, 6vw, 72px);
+  text-align: center;
+}
+
+.brand {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 13px);
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 宋体 400 + 大字距，比合成粗体更接近参考站站标的分量 */
+.brand-cn {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 5.2vw, 46px);
+  line-height: 1.15;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--ink);
+  transition: color 0.18s ease;
+}
+
+.brand-en {
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: clamp(10px, 1.4vw, 12px);
+  letter-spacing: 0.56em;
+  text-indent: 0.56em;
+  color: var(--gray);
+}
+
+.brand:hover .brand-cn {
+  color: #000;
+}
+
+.brand-sub {
+  margin: clamp(13px, 2vw, 20px) 0 0;
+  font-size: clamp(11px, 1.3vw, 12.5px);
+  letter-spacing: 0.22em;
+  color: var(--gray-light);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(12px, 4vw, 52px);
+  margin-top: clamp(22px, 3.6vw, 38px);
+}
+
+.nav-edge {
+  flex: 0 0 clamp(14px, 4vw, 46px);
+  height: 1px;
+  background: var(--line);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 72px;
+  min-height: 48px;
+  padding: 6px 4px 10px;
+  border-bottom: 1px solid transparent;
+  text-decoration: none;
+  color: var(--gray);
+  transition: color 0.18s ease;
+}
+
+.nav-cn {
+  font-size: clamp(12.5px, 1.6vw, 14px);
+  letter-spacing: 0.36em;
+  text-indent: 0.36em;
+}
+
+.nav-en {
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--gray-light);
+}
+
+.nav-item:hover {
+  color: var(--ink);
+}
+
+.nav-item.is-current {
+  color: var(--ink);
+  border-bottom-color: var(--line);
+}
+
+.nav-item.is-current .nav-cn {
+  font-weight: 500;
+}
+
+/* ---------- 标题 ---------- */
+
+.page-title {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(12px, 2vw, 20px);
+  margin: 0 0 clamp(30px, 4.5vw, 52px);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(22px, 3.1vw, 31px);
+  letter-spacing: 0.26em;
+  color: var(--ink);
+}
+
+.page-title small {
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: var(--gray-light);
+}
+
+/* 参考站的分类标题：下划线只与文字等宽，不拉通整行。 */
+.section-title,
+.sub-title {
+  display: inline-block;
+  padding-bottom: 0.75em;
+  border-bottom: 1px solid var(--line);
+  font-weight: 400;
+  font-size: clamp(12.5px, 1.5vw, 14px);
+  letter-spacing: 0.32em;
+  color: var(--gray);
+}
+
+.section-title {
+  margin: 0 0 clamp(28px, 4vw, 44px);
+}
+
+.sub-title {
+  margin: clamp(40px, 5.5vw, 62px) 0 clamp(18px, 2.6vw, 26px);
+}
+
+/* 中文标题后跟一个小号拉丁副题，与 .page-title 的排法一致。 */
+.sub-title small {
+  margin-left: clamp(10px, 1.6vw, 18px);
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--gray-light);
+}
+
+.crumbs {
+  margin: 0 0 clamp(22px, 3vw, 34px);
+  font-family: var(--latin);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--gray-light);
+}
+
+.crumbs a {
+  color: var(--gray);
+  text-decoration: none;
+}
+
+.crumbs a:hover {
+  color: var(--ink);
+}
+
+.crumb-sep {
+  margin: 0 10px;
+  color: #d8d7d2;
+}
+
+/* ---------- 首页 ---------- */
+
+.hero {
+  margin: 0 0 clamp(52px, 8vw, 96px);
+}
+
+.hero-link {
+  display: block;
+}
+
+.hero-img {
+  width: 100%;
+  height: auto;
+}
+
+.hero-cap {
+  margin: clamp(14px, 2vw, 20px) 0 0;
+  text-align: center;
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 12.5px;
+  letter-spacing: 0.18em;
+  color: var(--gray-light);
+}
+
+.hero-cap a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.hero-cap a:hover {
+  color: var(--ink);
+}
+
+.lede {
+  max-width: 34em;
+  margin: clamp(30px, 5.5vw, 58px) auto clamp(40px, 7vw, 76px);
+  text-align: center;
+}
+
+.lede-title {
+  margin: 0 0 clamp(18px, 3vw, 28px);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(22px, 4.4vw, 34px);
+  letter-spacing: 0.16em;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.lede-body {
+  margin: 0;
+  font-size: clamp(13.5px, 1.5vw, 15.5px);
+  line-height: 2.35;
+  color: var(--gray);
+}
+
+/* ---------- 系列入口与作品网格 ----------
+   格子里放整幅画：不裁切（文档要求），也不再套方形白框——
+   白底留边会让横图竖图都悬在空方块里，看着像没加载完。 */
+
+.entries {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+  gap: clamp(38px, 5.5vw, 72px) clamp(16px, 2.6vw, 34px);
+}
+
+/* 系列页单列竖排：画占满内容容器，三行文字紧跟在每张画下面，
+   再往下是下一张——信息流的排法，行距比多列网格更大。 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(48px, 7.5vw, 88px);
+  margin-top: clamp(10px, 2vw, 24px);
+}
+
+.entry,
+.cell {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.entry-cell,
+.cell-frame {
+  display: block;
+  width: 100%;
+}
+
+.entry-img,
+.cell-img {
+  width: 100%;
+  height: auto;
+}
+
+.entry-name,
+.cell-title {
+  display: block;
+  margin-top: clamp(14px, 1.9vw, 19px);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(14px, 1.8vw, 16px);
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  color: var(--ink);
+  transition: color 0.18s ease;
+}
+
+.cell-meta {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  color: var(--gray);
+}
+
+.cell-meta + .cell-meta {
+  font-family: var(--sans);
+  font-size: 11.5px;
+}
+
+.entry-count {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--gray-light);
+}
+
+/* 参考站用「● + 状态」标记可得性，不用按钮式的框。 */
+.cell-status::before {
+  content: "●";
+  margin-right: 6px;
+  font-size: 7px;
+  vertical-align: 0.25em;
+  color: var(--gray);
+}
+
+.cell-status.is-sold,
+.cell-status.is-sold::before {
+  color: var(--gray-light);
+}
+
+.entry:hover .entry-name,
+.cell:hover .cell-title {
+  color: #000;
+}
+
+.cell:hover .cell-meta {
+  color: var(--ink-soft);
+}
+
+.series-intro {
+  max-width: var(--measure);
+  margin: 0 0 clamp(30px, 4.5vw, 48px);
+}
+
+.series-intro p {
+  margin: 0 0 1.2em;
+}
+
+.series-intro p:last-child {
+  margin-bottom: 0;
+}
+
+.footnote {
+  max-width: 46em;
+  margin: clamp(10px, 2vw, 16px) 0 0;
+  font-size: 12px;
+  line-height: 2;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+}
+
+.entries + .footnote {
+  margin-top: clamp(34px, 5vw, 54px);
+}
+
+/* ---------- 单件作品 ---------- */
+
+.work {
+  margin: 0 0 clamp(28px, 4vw, 44px);
+  text-align: center;
+}
+
+.work-link {
+  display: inline-block;
+}
+
+.work-img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: min(74vh, 880px);
+  margin: 0 auto;
+}
+
+.work-hint {
+  margin: 12px 0 0;
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gray-light);
+}
+
+.work-info {
+  max-width: 34em;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.work-title {
+  margin: 0 0 clamp(16px, 2.4vw, 24px);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(20px, 3vw, 27px);
+  letter-spacing: 0.18em;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.work-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px clamp(16px, 3vw, 30px);
+  margin: 0 0 clamp(18px, 2.6vw, 26px);
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 12.5px;
+  letter-spacing: 0.16em;
+}
+
+.meta-row {
+  display: flex;
+  gap: 8px;
+}
+
+.work-meta dt {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  color: var(--gray-light);
+}
+
+.work-meta dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.btn {
+  display: inline-block;
+  min-height: 46px;
+  padding: 13px clamp(26px, 5vw, 44px);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  font-size: 12.5px;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.btn:hover {
+  border-color: rgba(0, 0, 0, 0.26);
+  background: #fafaf8;
+}
+
+.btn-note {
+  margin: 12px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--gray-light);
+}
+
+.sold {
+  display: inline-block;
+  margin: 0;
+  padding: 13px 28px;
+  border: 1px solid var(--line);
+  font-size: 12px;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  color: var(--gray-light);
+}
+
+.siblings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 18px;
+  max-width: 46em;
+  margin: clamp(40px, 6vw, 68px) auto 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+.sib {
+  color: var(--gray);
+  text-decoration: none;
+  padding: 6px 2px;
+}
+
+.sib:hover {
+  color: var(--ink);
+}
+
+.sib span {
+  margin: 0 8px;
+  color: var(--gray-light);
+}
+
+.sib-back {
+  margin: 0 auto;
+  color: var(--gray-light);
+}
+
+/* ---------- 关于 ----------
+   参考站的关于页是错落的：照片浮在右上一角，陈述绕着它排，
+   两栏不会因为我方还没有照片就撑出一个空洞。
+   .prose 前缀是为了盖过后面的 .slot { margin: 0 }。 */
+.prose.about-body {
+  max-width: 56em;
+}
+
+.prose .portrait--float {
+  float: right;
+  width: clamp(168px, 21vw, 232px);
+  margin: clamp(4px, 1vw, 10px) 0 clamp(30px, 3.6vw, 44px) clamp(30px, 5vw, 58px);
+  max-width: none;
+}
+
+.about-body::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* 中文没有真正的斜体，合成倾斜会破坏宋体的骨架；
+   文档说的「斜体、浅灰、行距大」在这里用衬线 + 淡色 + 大行距落实。 */
+.statement {
+  margin: 0 0 clamp(18px, 2.6vw, 26px);
+  font-family: var(--serif);
+  font-size: clamp(15.5px, 1.9vw, 18px);
+  line-height: 2.4;
+  color: var(--gray);
+  text-align: left;
+}
+
+.portrait figcaption,
+.slot figcaption {
+  margin: 12px 0 0;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  color: var(--gray-light);
+}
+
+.portrait-img {
+  width: 100%;
+  height: auto;
+}
+
+.prose {
+  max-width: 52em;
+}
+
+.prose p {
+  margin: 0 0 clamp(15px, 2.2vw, 22px);
+  text-align: justify;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+.cv {
+  margin: 0 0 clamp(18px, 2.6vw, 26px);
+}
+
+.cv-row {
+  display: grid;
+  grid-template-columns: clamp(88px, 13vw, 156px) 1fr;
+  gap: clamp(10px, 2vw, 24px);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.cv-row dt {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  color: var(--gray-light);
+}
+
+.cv-row dd {
+  margin: 0;
+  font-size: clamp(13.5px, 1.6vw, 15px);
+  line-height: 1.95;
+  color: var(--ink-soft);
+}
+
+.cv-row a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.cv-row a:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* ---------- 待补位：文档没给的图，做成一个明确的空位而不是一块死灰 ---------- */
+
+.slot {
+  display: block;
+  margin: 0;
+}
+
+.slot-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  aspect-ratio: var(--slot-ratio, 4 / 5);
+  background: linear-gradient(180deg, #fcfcfa, #f7f7f4);
+  border: 1px dashed rgba(0, 0, 0, 0.16);
+}
+
+.slot-label,
+.slot-file {
+  font-size: 11.5px;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  color: var(--gray-light);
+}
+
+.slot-label {
+  color: var(--gray);
+}
+
+.slot-file {
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+}
+
+.slot--cell {
+  margin: 0;
+}
+
+.slot--cell .slot-box {
+  aspect-ratio: 1 / 1;
+}
+
+.slot--work {
+  max-width: min(340px, 78%);
+  margin: 0 auto clamp(16px, 2.4vw, 22px);
+}
+
+.work-desc {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--gray-light);
+}
+
+/* ---------- 联系 ---------- */
+
+.contact-intro {
+  max-width: 32em;
+  margin: 0 0 clamp(24px, 3vw, 34px);
+  font-size: clamp(14.5px, 1.8vw, 16.5px);
+  line-height: 2.2;
+  color: var(--ink-soft);
+}
+
+.contact-mail {
+  margin: 0 0 clamp(32px, 4vw, 46px);
+}
+
+.contact-mail a {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(17px, 2.6vw, 23px);
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 5px;
+}
+
+.contact-mail a:hover {
+  border-bottom-color: var(--ink);
+}
+
+/* ---------- 页脚 ----------
+   邮箱、Instagram、小红书同级，一律用图标排在同一条线上。 */
+
+.site-foot {
+  margin-top: clamp(56px, 9vw, 112px);
+  padding-top: clamp(26px, 3.5vw, 36px);
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+/* 三个方块一样大，方块之间一个 gap，图标到图标才是等间距。
+   方块 44px 保证触控面积，图标本身 20px。 */
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0 clamp(12px, 2.4vw, 20px);
+  margin: 0;
+}
+
+.foot-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: var(--gray);
+  transition: color 0.18s ease;
+}
+
+.foot-icon:hover {
+  color: var(--ink);
+}
+
+.foot-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.foot-name {
+  margin: clamp(18px, 3vw, 26px) 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--ink);
+}
+
+.foot-name-en {
+  margin-left: 8px;
+  font-family: var(--latin);
+  font-weight: 300;
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
+  color: var(--gray-light);
+}
+
+.foot-copy {
+  max-width: 42em;
+  margin: 14px auto 0;
+  font-size: 11px;
+  line-height: 1.95;
+  letter-spacing: 0.05em;
+  color: var(--gray-light);
+}
+
+/* ---------- 窄屏 ---------- */
+
+@media (max-width: 880px) {
+  .entries {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    line-height: 1.95;
+  }
+
+  .frame {
+    margin: 0;
+    border-left: 0;
+    border-right: 0;
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .brand-cn {
+    letter-spacing: 0.24em;
+    text-indent: 0.24em;
+  }
+
+  .nav {
+    gap: clamp(18px, 7vw, 34px);
+    margin-top: 18px;
+  }
+
+  /* 手机端只留一行中文导航：去掉装饰横线和英文小字，压缩内边距。 */
+  .nav-edge,
+  .nav-en {
+    display: none;
+  }
+
+  .nav-item {
+    min-width: 0;
+    min-height: 44px;
+    padding: 11px 0 9px;
+  }
+
+  .nav-cn {
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+  }
+
+  /* 窄屏不绕排：照片单独一行，靠右排在陈述之前。 */
+  .prose .portrait--float {
+    float: none;
+    width: 58%;
+    max-width: 220px;
+    margin: 0 0 clamp(24px, 6vw, 32px) auto;
+  }
+
+  .statement {
+    font-size: 16px;
+    line-height: 2.25;
+  }
+
+  /* 联系渠道是同一级的信息：手机端也不把标签和内容拆成两行。 */
+  .cv-row {
+    grid-template-columns: max-content 1fr;
+    gap: clamp(10px, 3.5vw, 22px);
+    padding: 13px 0;
+  }
+
+  .prose p {
+    text-align: left;
+  }
+
+  .siblings {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sib-back {
+    order: 3;
+    margin: 6px auto 0;
+  }
+
+  .work-img {
+    max-height: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .entries {
+    gap: 26px 12px;
+  }
+
+  .grid {
+    gap: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

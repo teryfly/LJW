@@ -1,0 +1,16 @@
+[Unit]
+Description=THEA 刘静文 个人网站（静态站点源站）
+Documentation=https://THEA.fhir.press
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/projects/LJW
+ExecStart=/usr/bin/python3 -m http.server 5268 --bind 127.0.0.1
+Restart=always
+RestartSec=3
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
